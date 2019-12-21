@@ -14,6 +14,7 @@ app.use(express.static(publicDirectoryPath));
 
 app.use(bodyParser.json());
 
+
 app.use('/api/auth', [loggerMiddleware], authRoutes); 
 app.use('/api/foods', [authMiddleware, loggerMiddleware], foodRoutes);
 app.use('/api/users', [authMiddleware], userRoutes);
@@ -21,7 +22,7 @@ app.use('/api/users', [authMiddleware], userRoutes);
 
 app.use(express.json());  
 
-
+app.get('/healthz', ( request, response ) => response.status(200).send({message:"all good!"}) )
 app.listen(process.env.PORT, _ => {
     console.log('Server is up on port ' + process.env.PORT);
 });
