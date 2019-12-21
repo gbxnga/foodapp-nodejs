@@ -4,6 +4,7 @@ pipeline {
     registryCredential = 'dockerhub'
   }
   agent any
+  tools {nodejs "node"}
   stages {
     stage('Compile') {
 
