@@ -22,9 +22,7 @@ pipeline {
     }
     stage('Testing') {
       steps {
-        sh 'cp .env.example .env'
-        sh 'php artisan key:generate'
-        sh 'vendor/bin/phpunit'
+        sh "echo 'running test'"
       }
     }     
     stage('Building image') {
