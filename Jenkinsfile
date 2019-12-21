@@ -10,6 +10,15 @@ pipeline {
       }
   }
   stages {
+    stage('Compile') {
+
+        steps {
+            sh 'whoami'
+            sh 'echo $PATH'
+
+        }
+
+    }
     stage('Build') {
       steps {
         sh 'npm install'
