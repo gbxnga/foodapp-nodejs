@@ -6,23 +6,16 @@ pipeline {
   agent any
   tools {nodejs "node"}
   stages {
-    stage('Compile') {
+    stage('Preparation') {
 
         steps {
             sh 'whoami'
             sh 'echo $PATH '
-
         }
-
-    }
-    stage('Build') {
-      steps {
-        sh 'npm install'
-      }
-    }
+    } 
     stage('Testing') {
       steps {
-        sh "echo 'running test'"
+        sh "npm run test"
       }
     }     
     stage('Building image') {
