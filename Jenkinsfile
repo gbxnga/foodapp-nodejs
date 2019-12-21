@@ -10,7 +10,7 @@ pipeline {
 
         steps {
             sh 'whoami'
-            sh 'echo $PATH'
+            sh 'echo $PATH '
 
         }
 
