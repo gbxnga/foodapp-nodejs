@@ -11,7 +11,6 @@ pipeline {
         steps {
             sh 'whoami'
             sh 'echo $PATH '
-            sh 'kubectl get pods'
         }
     } 
     stage('Testing') {
@@ -33,6 +32,12 @@ pipeline {
             dockerImage.push()
           }
         }
+      }
+    }
+    stage('Deploy App') {
+      steps {
+          sh "kubectl set image deployment/foodapp-deployment foodapp=$registry:$BUILD_NUMBER"
+          sh("kubectl describe deployment foodapp-deployment")
       }
     }
     stage('Remove Unused docker image') {
