@@ -11,6 +11,7 @@ pipeline {
         steps {
             sh 'whoami'
             sh 'echo $PATH '
+            sh 'kubectl get pods'
         }
     } 
     stage('Testing') {
@@ -32,12 +33,6 @@ pipeline {
             dockerImage.push()
           }
         }
-      }
-    }
-    stage('Deploy App') {
-      steps {
-          
-          sh("kubectl get pods")
       }
     }
     stage('Remove Unused docker image') {
