@@ -21,16 +21,7 @@ spec:
         - containerPort: 80
         env:
         - name: WORDPRESS_DB_HOST
-          value: mysql-service
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: 80
-            httpHeaders:
-            - name: Custom-Header
-              value: Awesome
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          value: mysql-service 
       
 
 # kubectl set image deployment/<deployment name> appname=<newimage>
