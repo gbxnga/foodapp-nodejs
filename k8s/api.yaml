@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: foodapp-deployment
+  labels:
+    app: foodapp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: foodapp
+  template:
+    metadata:
+      labels:
+        app: foodapp
+    spec:
+      containers:
+      - name: foodapp
+        image: gbxnga/foodapp-nodejs:healthz
+        ports:
+        - containerPort: 80
+        env:
+        - name: WORDPRESS_DB_HOST
+          value: mysql-service
+        livenessProbe:
+          httpGet:
+            path: /healthz
+            port: 80
+            httpHeaders:
+            - name: Custom-Header
+              value: Awesome
+          initialDelaySeconds: 3
+          periodSeconds: 3
+      
+
+# kubectl set image deployment/<deployment name> appname=<newimage>
+# kubectl set image deployment/nginx-deployment nginx=nginx:1.17.1
+# kubectl rollout status deployment/<deployment_name>
+# kubectl rollout history deployment/<deployment_name>
+# kubectl rollout undo deployment/<deployment_name>
+# kubectl edit deployment/<deployment_name>
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: foodapp-service
+spec:
+  selector:
+    app: foodapp
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
+  type: LoadBalancer
+
+
+
+ 
