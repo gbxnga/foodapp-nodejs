@@ -36,8 +36,8 @@ pipeline {
     }
     stage('Deploy App') {
       steps {
-          sh "kubectl set image deployment/foodapp-deployment foodapp=$registry:$BUILD_NUMBER"
-          sh("kubectl describe deployment foodapp-deployment")
+          sh("sed -i.bak 's|gbxnga/foodapp-nodejs:healthz|$registry:$BUILD_NUMBER|' ./k8s/api.yml")
+          sh("kubectl apply -f k8s/")          
       }
     }
     stage('Remove Unused docker image') {
