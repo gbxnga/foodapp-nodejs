@@ -14,7 +14,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
   ) {
     node('mypod') {
         stage('Check running containers') {
-            container('docker') {
+            container('docker') { 
                 // example to show you can run docker commands when you mount the socket
                 sh 'hostname'
                 sh 'hostname -i'
