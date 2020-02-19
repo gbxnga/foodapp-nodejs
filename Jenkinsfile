@@ -1,49 +1,81 @@
-pipeline {
-  environment {
-    registry = "gbxnga/foodapp-nodejs"
-    registryCredential = 'dockerhub'
-  }
-  agent any
-  tools {nodejs "node"}
-  stages {
-    stage('Preparation') {
+podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
+    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'node', image: 'node', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
+    containerTemplate(name: 'kubectl', image: 'amaceog/kubectl', ttyEnabled: true, command: 'cat'),
+    containerTemplate(name: 'helm', image: 'alpine/helm:2.14.0', ttyEnabled: true, command: 'cat')
+  ],
 
-        steps {
-            sh 'whoami'
-            sh 'echo $PATH '
+  volumes: [
+    hostPathVolume(mountPath: '/var/run/docker.sock', hostPath: '/var/run/docker.sock'),
+    hostPathVolume(mountPath: '/usr/local/bin/helm', hostPath: '/usr/local/bin/helm')
+  ]
+  ) {
+    node('mypod') {
+        stage('Check running containers') {
+            container('docker') {
+                // example to show you can run docker commands when you mount the socket
+                sh 'hostname'
+                sh 'hostname -i'
+                sh 'docker ps'
+            }
+            container('kubectl') {
+                // example to show you can run docker commands when you mount the socket
+                sh 'kubectl get pods' 
+                // sh 'helm version'
+            }
+            container('helm') {
+                // example to show you can run docker commands when you mount the socket
+                // sh 'helm init --service-account helm-tiller'
+                //sh 'helm list'
+                sh 'helm init --client-only --skip-refresh'
+                sh 'helm repo update'
+                sh 'helm history foodapp'
+            }
+        } 
+        
+        stage('Clone repository') {
+            container('git') {
+                sh 'whoami'
+                sh 'hostname -i'
+                sh 'git clone -b master https://github.com/gbxnga/foodapp-nodejs.git'
+            }
         }
-    } 
-    stage('Testing') {
-      steps {
-        sh "npm run test"
-      }
-    }     
-    stage('Building image') {
-      steps{
-        script {
-          dockerImage = docker.build registry + ":$BUILD_NUMBER"
+
+        stage('Testing') {
+            container('node') {
+                dir('foodapp-nodejs/') { 
+                    sh 'whoami'
+                    sh 'hostname -i'
+                    sh 'npm install'
+                    sh 'npm install -g jest'
+                    sh 'npm run test'
+                }
+            }
         }
-      }
-    } 
-    stage('Deploy Image') {
-      steps{
-         script {
-            docker.withRegistry( '', registryCredential ) {
-            dockerImage.push()
-          }
+        
+        stage('Build Image'){
+            container('docker'){
+                
+                dir('foodapp-nodejs/'){
+                    sh 'docker build -t gbxnga/foodapp-nodejs .'
+                    sh 'docker ps'
+                    /*sh 'docker push gbxnga/foodapp-nodejs'*/
+                }
+                
+            }
         }
-      }
+        
+        stage('Deploy to k8s'){
+            container('helm'){
+                
+                 
+                    sh 'helm list'
+                    sh 'helm upgrade foodapp ./foodapp-nodejs/k8s/foodapp'
+                    sh 'helm list | grep foodapp'
+                
+                
+            }
+        }
     }
-    stage('Deploy App') {
-      steps {
-          sh("sed -i.bak 's|gbxnga/foodapp-nodejs:healthz|$registry:$BUILD_NUMBER|' ./k8s/api.yaml")
-          sh("kubectl apply -f k8s/")          
-      }
-    }
-    stage('Remove Unused docker image') {
-      steps{
-        sh "docker rmi $registry:$BUILD_NUMBER"
-      }
-    }
-  }
 }
