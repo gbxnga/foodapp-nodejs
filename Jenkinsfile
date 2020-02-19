@@ -1,3 +1,4 @@
+
 podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
     containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'node', image: 'node', command: 'cat', ttyEnabled: true),
@@ -34,13 +35,13 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             }
         } 
         
-        stage('Clone repository') {
+        /*stage('Clone repository') {
             container('git') {
                 sh 'whoami'
                 sh 'hostname -i'
                 sh 'git clone -b master https://github.com/gbxnga/foodapp-nodejs.git'
             }
-        }
+        }*/
 
         stage('Testing') {
             container('node') {
@@ -68,13 +69,9 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         
         stage('Deploy to k8s'){
             container('helm'){
-                
-                 
-                    sh 'helm list'
-                    sh 'helm upgrade foodapp ./foodapp-nodejs/k8s/foodapp'
-                    sh 'helm list | grep foodapp'
-                
-                
+                sh 'helm list'
+                sh 'helm upgrade --set image.tag=latest foodapp ./foodapp-nodejs/k8s/foodapp'
+                sh 'helm list | grep foodapp'
             }
         }
     }
