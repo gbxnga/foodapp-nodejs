@@ -45,24 +45,24 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
 
         stage('Testing') {
             container('node') {
-                dir('foodapp-nodejs/') { 
+                // dir('foodapp-nodejs/') { 
                     sh 'whoami'
                     sh 'hostname -i'
                     sh 'npm install'
                     sh 'npm install -g jest'
                     sh 'npm run test'
-                }
+                //}
             }
         }
         
         stage('Build Image'){
             container('docker'){
                 
-                dir('foodapp-nodejs/'){
+                // dir('foodapp-nodejs/'){
                     sh 'docker build -t gbxnga/foodapp-nodejs .'
                     sh 'docker ps'
                     /*sh 'docker push gbxnga/foodapp-nodejs'*/
-                }
+                //}
                 
             }
         }
