@@ -23,7 +23,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             }
             container('kubectl') {
                 // example to show you can run docker commands when you mount the socket
-                sh 'kubectl get pods -n default' 
+                sh 'kubectl get pods -n default ' 
                 // sh 'helm version'
             }
             container('helm') {
