@@ -19,7 +19,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                 sh 'hostname'
                 sh 'hostname -i' 
                 sh 'docker ps'
-                sh 'ls'
+                sh 'ls && whoami'
             }
             container('kubectl') {
                 // example to show you can run docker commands when you mount the socket
