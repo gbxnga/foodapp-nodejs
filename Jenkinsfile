@@ -74,7 +74,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         stage('Deploy to k8s'){
             container('helm'){
                 sh 'helm list'
-                sh 'helm upgrade --set image.tag=latest foodapp ./foodapp-nodejs/k8s/foodapp'
+                sh 'helm upgrade --set image.tag=latest foodapp ./k8s/foodapp'
                 sh 'helm list | grep foodapp'
             }
         }
