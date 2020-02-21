@@ -77,6 +77,6 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                 sh 'helm upgrade --set image.tag=latest foodapp ./foodapp-nodejs/k8s/foodapp'
                 sh 'helm list | grep foodapp'
             }
-        }*/
+        }
     }
 }
