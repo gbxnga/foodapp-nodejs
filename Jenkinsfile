@@ -13,6 +13,9 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
   ]
   ) {
     node('mypod') {
+        stage('Get latest version of code') {
+          checkout scm
+        }
         stage('Check running containers') {
             container('docker') { 
                 // example to show you can run docker commands when you mount the socket
@@ -44,7 +47,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             }
         }*/
 
-        /*stage('Testing') {
+        stage('Testing') {
             container('node') {
                 // dir('foodapp-nodejs/') { 
                     sh 'whoami'
@@ -65,7 +68,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                     /*sh 'docker push gbxnga/foodapp-nodejs'*/
                 //}
                 
-           /* }
+            }
         }
         
         stage('Deploy to k8s'){
