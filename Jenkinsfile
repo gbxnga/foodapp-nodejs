@@ -44,7 +44,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             }
         }*/
 
-        /*stage('Testing') {
+        stage('Testing') {
             container('node') {
                 // dir('foodapp-nodejs/') { 
                     sh 'whoami'
@@ -65,7 +65,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                     /*sh 'docker push gbxnga/foodapp-nodejs'*/
                 //}
                 
-           /* }
+            }
         }
         
         stage('Deploy to k8s'){
@@ -74,6 +74,6 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                 sh 'helm upgrade --set image.tag=latest foodapp ./foodapp-nodejs/k8s/foodapp'
                 sh 'helm list | grep foodapp'
             }
-        }*/
+        }
     }
 }
