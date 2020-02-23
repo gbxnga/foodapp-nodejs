@@ -38,7 +38,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
 
               withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
-                sh 'docker build -t gbxnga/foodapp-nodejs:${BUILD_NUMBER} .'
+                sh "docker build -t gbxnga/foodapp-nodejs:${BUILD_NUMBER} ."
                 sh 'docker image ls' 
               } 
                 
@@ -49,7 +49,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('docker') { 
               sh 'whoami'
               sh 'hostname -i' 
-              sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER} npm run test '                  
+              sh "docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER} npm run test "                 
             }
         }
 
@@ -57,7 +57,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('docker'){
               withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker image ls'
-                sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
+                sh "docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}"
               }                 
             }
         }
@@ -66,10 +66,18 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('helm'){
                 sh 'helm list'
                 sh 'helm lint ./k8s/foodapp'
-                sh 'helm upgrade --wait --timeout 60 --set image.tag=${BUILD_NUMBER} foodapp ./k8s/foodapp'
+                sh "helm upgrade --wait --timeout 60 --set image.tag=${BUILD_NUMBER} foodapp ./k8s/foodapp"
                 sh 'helm list | grep foodapp'
                 //sh 'helm test foodapp'
             }
         }
+
+        stage('Clean Ups'){
+            container('docker'){
+                sh "docker rmi gbxnga/foodapp-nodejs:${BUILD_NUMBER}"
+            }
+        }
+
+        
     }
 }
