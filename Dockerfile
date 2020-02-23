@@ -15,4 +15,4 @@ EXPOSE 80
 RUN npm install -g nodemon  
 
 #CMD [ "nodemon", "l", "index.js" ]  
-CMD ["npm", "run", "dev"]
+CMD ["npm", "run", "prod"]
