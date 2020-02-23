@@ -37,38 +37,33 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
                 sh 'helm repo update'
                 sh 'helm history foodapp'
             }
-        } 
-        
-        /*stage('Clone repository') {
-            container('git') {
-                sh 'whoami'
-                sh 'hostname -i'
-                sh 'git clone -b master https://github.com/gbxnga/foodapp-nodejs.git'
-            }
-        }*/
-
-        stage('Testing') {
-            container('node') {
-                // dir('foodapp-nodejs/') { 
-                    sh 'whoami'
-                    sh 'hostname -i'
-                    sh 'npm install'
-                    sh 'npm install -g jest'
-                    sh 'npm run test'
-                //}
-            }
-        }
-        
+        }  
+       
         stage('Build Image'){
             container('docker'){
 
               withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
                 sh 'docker build -t gbxnga/foodapp-nodejs:${BUILD_NUMBER} .'
-                sh 'docker ps'
+                sh 'docker image ls'
                 sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
               } 
                 
+            }
+        }
+
+        stage('Testing') {
+            container('docker') {
+                // dir('foodapp-nodejs/') { 
+                    sh 'whoami'
+                    sh 'hostname -i'
+                    // sh 'npm install'
+                    //sh 'npm install -g jest'
+                    //sh 'npm run test'
+                    sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
+                    sh 'docker ps'
+                    sh 'docker exec -it 857f35c7267d npm run test'
+                //}
             }
         }
         
