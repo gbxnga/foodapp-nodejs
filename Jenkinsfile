@@ -62,13 +62,9 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         stage('Build Image'){
             container('docker'){
 
-                  withCredentials([[ 
-                      $class: 'StringBinding',
-                      credentialsId: 'docker-login',
-                      usernameVariable: 'DOCKER_USERNAME',
-                      passwordVariable: 'DOCKER_PASSWORD',
-                  ]]) {
-                    sh 'docker login --username="${DOCKER_USERNAME}" --password="${DOCKER_PASSWORD}"'
+                   
+                  withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                    sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
                   }
                 
                 // dir('foodapp-nodejs/'){
