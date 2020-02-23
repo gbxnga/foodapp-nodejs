@@ -38,11 +38,11 @@ spec:
               protocol: TCP
           livenessProbe:
             httpGet:
-              path: {{ .Values.livenessPath | default “/” }}
+              path: {{ .Values.livenessPath | default "/" }}
               port: http
           readinessProbe:
             httpGet:
-              path: {{ .Values.readinessPath | default “/” }}
+              path: {{ .Values.readinessPath | default "/" }}
               port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

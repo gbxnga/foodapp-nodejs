@@ -39,8 +39,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
               withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
                 sh 'docker build -t gbxnga/foodapp-nodejs:${BUILD_NUMBER} .'
-                sh 'docker image ls'
-                sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
+                sh 'docker image ls' 
               } 
                 
             }
