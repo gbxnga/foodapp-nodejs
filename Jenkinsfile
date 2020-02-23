@@ -63,6 +63,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('docker'){
 
                   withCredentials([[ 
+                      $class: 'StringBinding',
                       credentialsId: 'docker-login',
                       usernameVariable: 'DOCKER_USERNAME',
                       passwordVariable: 'DOCKER_PASSWORD',
