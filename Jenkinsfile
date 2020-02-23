@@ -62,16 +62,12 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         stage('Build Image'){
             container('docker'){
 
-                   
-                  withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
-                    sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
-                  }
-                
-                // dir('foodapp-nodejs/'){
-                    sh 'docker build -t gbxnga/foodapp-nodejs .'
-                    sh 'docker ps'
-                    /*sh 'docker push gbxnga/foodapp-nodejs'*/
-                //}
+              withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
+                sh 'docker build -t gbxnga/foodapp-nodejs .'
+                sh 'docker ps'
+                sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
+              } 
                 
             }
         }
