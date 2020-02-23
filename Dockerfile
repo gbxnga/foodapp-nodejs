@@ -2,11 +2,11 @@ FROM node:10
 
 WORKDIR /srv/app 
 
-COPY package.json package.json  
+COPY . /srv/app  
 
 RUN npm install  
 
-COPY . /srv/app  
+ 
 
 EXPOSE 8081
 EXPOSE 3000 
