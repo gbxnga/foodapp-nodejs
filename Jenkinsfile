@@ -50,9 +50,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('docker') { 
               sh 'whoami'
               sh 'hostname -i' 
-              sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER} '
-              sh 'docker ps'
-              sh 'docker exec -it 857f35c7267d npm run test'                 
+              sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER} npm run test --env PORT=3000'                  
             }
         }
 
