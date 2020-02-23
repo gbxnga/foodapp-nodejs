@@ -4,3 +4,6 @@ metadata:
   name: {{ include "foodapp.fullname" . }} 
 data:
   PORT: "80" 
+  JWT_SECRET: "mysecret" 
+  MONGODB_URL: "mongodb+srv://testuser:testpassword@foodappcluster-chv1l.mongodb.net/test?retryWrites=true&w=majority"
+  DATABASE_NAME: "prod"
