@@ -75,7 +75,8 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         stage('Clean Ups'){
             container('docker'){
                 //sh "docker image prune -a -y"
-                sh 'docker rmi $(docker images -a |grep gbxnga/foodapp-nodejs | awk \'{print $3}\')'
+                sh 'docker rmi -f $(docker images | grep "<none>" | awk \'{print $3}\')'
+                sh 'docker rmi $(docker images -f dangling=true |grep gbxnga/foodapp-nodejs | awk \'{print $3}\')'
             }
         }
 
