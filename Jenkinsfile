@@ -17,22 +17,16 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
           checkout scm
         }
         stage('Check running containers') {
-            container('docker') { 
-                // example to show you can run docker commands when you mount the socket
+            container('docker') {  
                 sh 'hostname'
                 sh 'hostname -i' 
                 sh 'docker ps'
                 sh 'ls'
             }
-            container('kubectl') {
-                // example to show you can run docker commands when you mount the socket
-                sh 'kubectl get pods -n default' 
-                // sh 'helm version'
+            container('kubectl') { 
+                sh 'kubectl get pods -n default'  
             }
-            container('helm') {
-                // example to show you can run docker commands when you mount the socket
-                // sh 'helm init --service-account helm-tiller'
-                //sh 'helm list'
+            container('helm') { 
                 sh 'helm init --client-only --skip-refresh'
                 sh 'helm repo update'
                 sh 'helm history foodapp'
@@ -53,21 +47,25 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
         }
 
         stage('Testing') {
-            container('docker') {
-                // dir('foodapp-nodejs/') { 
-                    sh 'whoami'
-                    sh 'hostname -i'
-                    // sh 'npm install'
-                    //sh 'npm install -g jest'
-                    //sh 'npm run test'
-                    sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
-                    sh 'docker ps'
-                    sh 'docker exec -it 857f35c7267d npm run test'
-                //}
+            container('docker') { 
+              sh 'whoami'
+              sh 'hostname -i' 
+              sh 'docker run gbxnga/foodapp-nodejs:${BUILD_NUMBER} '
+              sh 'docker ps'
+              sh 'docker exec -it 857f35c7267d npm run test'                 
+            }
+        }
+
+        stage('Push Image'){
+            container('docker'){
+              withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
+                sh 'docker image ls'
+                sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
+              }                 
             }
         }
         
-        stage('Deploy to k8s'){
+        stage('Deploy Image to k8s'){
             container('helm'){
                 sh 'helm list'
                 sh 'helm lint ./k8s/foodapp'
