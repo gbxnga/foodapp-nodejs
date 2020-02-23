@@ -67,7 +67,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('helm'){
                 sh 'helm list'
                 sh 'helm lint ./k8s/foodapp'
-                sh 'helm upgrade --set image.tag=${BUILD_NUMBER} foodapp ./k8s/foodapp'
+                sh 'helm upgrade --wait --timeout 60 --set image.tag=${BUILD_NUMBER} foodapp ./k8s/foodapp'
                 sh 'helm list | grep foodapp'
                 //sh 'helm test foodapp'
             }

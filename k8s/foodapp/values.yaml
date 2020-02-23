@@ -8,6 +8,8 @@ image:
   repository: gbxnga/foodapp-nodejs
   tag: healthz
   pullPolicy: IfNotPresent
+  readinessPath: /
+  livenessPath: /healthz
 
 imagePullSecrets: []
 nameOverride: ""
