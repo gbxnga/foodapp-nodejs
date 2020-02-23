@@ -7,3 +7,4 @@ data:
   JWT_SECRET: "mysecret" 
   MONGODB_URL: "mongodb+srv://testuser:testpassword@foodappcluster-chv1l.mongodb.net/test?retryWrites=true&w=majority"
   DATABASE_NAME: "prod"
+  APP_NAME: {{ include "foodapp.fullname" . }}
