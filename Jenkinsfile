@@ -64,7 +64,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
 
               withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD')]) {
                 sh 'docker login --username="${USERNAME}" --password="${PASSWORD}"'
-                sh 'docker build -t gbxnga/foodapp-nodejs .'
+                sh 'docker build -t gbxnga/foodapp-nodejs:${BUILD_NUMBER} .'
                 sh 'docker ps'
                 sh 'docker push gbxnga/foodapp-nodejs:${BUILD_NUMBER}'
               } 
@@ -76,7 +76,7 @@ podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
             container('helm'){
                 sh 'helm list'
                 sh 'helm lint ./k8s/foodapp'
-                sh 'helm upgrade --set image.tag=latest foodapp ./k8s/foodapp'
+                sh 'helm upgrade --set image.tag=${BUILD_NUMBER} foodapp ./k8s/foodapp'
                 sh 'helm list | grep foodapp'
                 //sh 'helm test foodapp'
             }
