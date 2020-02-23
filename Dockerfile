@@ -13,7 +13,7 @@ EXPOSE 3000
 EXPOSE 80
 
 RUN npm install -g nodemon
-RUN npm instale -g jest  
+RUN npm install -g jest  
 
 #CMD [ "nodemon", "l", "index.js" ]  
 CMD ["npm", "run", "prod"]
