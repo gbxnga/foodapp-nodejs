@@ -1,7 +1,7 @@
 
-podTemplate(label: 'mypod', serviceAccount: 'jenkins', containers: [
-    containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
-    containerTemplate(name: 'node', image: 'node', command: 'cat', ttyEnabled: true),
+podTemplate(label: 'mypod', serviceAccount: 'jenkins-ci', containers: [
+    //containerTemplate(name: 'git', image: 'alpine/git', ttyEnabled: true, command: 'cat'),
+    //containerTemplate(name: 'node', image: 'node', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'docker', image: 'docker', command: 'cat', ttyEnabled: true),
     containerTemplate(name: 'kubectl', image: 'amaceog/kubectl', ttyEnabled: true, command: 'cat'),
     containerTemplate(name: 'helm', image: 'alpine/helm:2.14.0', ttyEnabled: true, command: 'cat')
